@@ -1,4 +1,3 @@
-
 $(function() {
     const nickname = new URLSearchParams(location.search).get("nickname");
     const roomMaster = null;
