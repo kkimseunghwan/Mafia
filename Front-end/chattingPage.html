@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>채팅방</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jQuery.js"></script>
+    <script src="http://195.168.9.139:8888/socket.io/socket.io.js"></script>
+    <script src="js/GameManager.js"></script>
+
+</head>
+<body>
+  <!-- 마피아 게임 채팅 페이지 -->
+  <section id="chattingPage" class="page">
+
+    <header class="header">
+      <table class="header_table" border="1">
+        <tr class="header_tr_1" border="1">
+            <td>
+                <!-- 밤 낮 시간 구분 아이콘-->
+                <img src="" alt="logo" class="logo">
+            </td>
+            <td>
+                <!-- 현재 시간 : ex) 2번째 밤, 투표 시간 ... -->
+                <h1>1번째 낮</h1>
+            </td>
+          </tr>
+
+      </table>
+      
+      <table class="header_table" border="1">
+        <tr class="header_tr_2" border="1">
+            <td>
+                <button id="backBtn" class="backBtn">나가기</button>
+            </td>
+            <td>
+                <!-- 남은 시간 -->
+                <h1>00:00</h1>
+            </td>
+          </tr>    
+      </table>
+    </header>
+    
+    <main class="content">
+      <div id="chatContainer">
+        <ul id="msgList">
+
+        </ul>
+      </div>
+    </main>
+    
+    <footer class="footer">
+      <input type="text" id="msgInput" placeholder="메시지를 입력해 주세요." autocomplete="off" />
+      <button id="menuBtn" class="menu-btn">메뉴</button>
+    </footer>
+  
+</section>
+</body>
+</html>

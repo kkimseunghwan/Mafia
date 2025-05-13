@@ -22,17 +22,68 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// 웹소켓 서버 생성
+// 
+
+
 const http = require('http').createServer();
-const io = require('socket.io')(http, { cors: { origin: "*" } });
+const io = require('socket.io')(http, {
+  cors: {
+    origin: "*"
+  }
+});
 
-// 소켓 통신 포트번호
-io.listen(8888); 
+io.listen(8888); // 소켓 통신
 
-// 소켓 연결 이벤트 처리 "connection"
+const users = {};
+
 io.on("connection", function(socket){
+  
   console.log(`[접속] ${socket.id}`);
 
+  // 방장 정보 저장
+  const isHost = hostSocketId === null;
+  if (isHost) { // 방장 없으면, 최초 접속한애를 방장으로
+    hostSocketId = socket.id;
+    socket.emit("hostStatus", true); // 방장 여부 개인적으로 전달
+  }
+
+  // 모든 클라에게 플레이어 정보 전달
+  io.sockets.emit("playerListUpdate", getPlayerList());
+
+
+  // 출입, 퇴장 메시지 전송
+  socket.on("inMsg", function(msg) {
+    console.log(`[메시지] ${JSON.stringify(msg)}`);
+    io.sockets.emit("inoutMsg", msg);
+    users[socket.id] = msg.nickname;
+  });
+
+  socket.on("disconnect", () => {
+    const nickname = users[socket.id];
+    if (nickname) {
+      console.log(`[퇴장] ${nickname} (${socket.id})`);
+
+      io.emit("inoutMsg", {
+        "nickname": nickname,
+        "msg": "연결이 끊어졌습니다.",
+        "socketID": socket.id
+      });
+      const wasHost = socket.id === hostSocketId; // 나간놈이 방장?
+      delete users[socket.id];
+
+      // 방장이 나갔다면, 다음 유저를 자동 방장으로 지정
+      if (wasHost) {
+        const remainingIds = Object.keys(users); // 남은 유저 목록
+        hostSocketId = remainingIds[0] || null; // 남은 유저 중 첫번째 유저를 방장으로
+
+        if (hostSocketId) {
+          io.to(hostSocketId).emit("hostStatus", true);
+        }
+      }
+    }
+  });
+
+  // 실시간 채팅 소켓 통신
   socket.on('clnMsg', function(msg) {
     console.log(`[메시지] ${JSON.stringify(msg)}`);
     // 메세지가 너무 길면 줄바꿈
@@ -41,15 +92,12 @@ io.on("connection", function(socket){
     }
 
     io.sockets.emit('srvMsg', msg);
-    
-    
   });
 
 });
 
-
-
 //
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
