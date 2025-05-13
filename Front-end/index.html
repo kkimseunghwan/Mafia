@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>실시간 채팅방</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script>
+      $(document).on("mobileinit", function () {
+        $.mobile.pushStateEnabled = false;
+        $.mobile.hashListeningEnabled = false;
+        $.mobile.linkBindingEnabled = false;
+      });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="http://195.168.9.139:8888/socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <div data-role="page" id="loginPage">
+        <div data-role="header" data-theme="b" data-position="fixed">
+            <h1>게임 참가</h1>
+        </div>
+
+        <div data-role="content">
+            <input type="text" id="nicknameInput" autocomplete="off" placeholder="닉네임을 입력해 주세요.">
+            <button id="joinBtn" data-role="button" data-theme="b">입장</button>
+            <!-- jQuery Mobile 적용 방지용 data-role="none" 추가 -->
+            <!-- <button id="joinBtn" class="joinBtn" data-role="none">입장</button> -->
+        </div>
+    </div>
+
+    <div data-role="page" id="chattingPage">
+        <div data-role="header" data-theme="b" data-position="fixed">
+            <button id="backBtn" data-role="button" data-theme="b">나가기</button>
+            <!-- <a href="#loginPage" data-role="button" data-theme="b">나가기</a> -->
+            <h1>채팅</h1>
+        </div>
+
+        <div data-role="content">
+            <div id="chatContainer">
+                <ul id="msgList"></ul>
+            </div>
+        </div>
+
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <div data-role="fieldcontain">
+                <input type="text" id="msgInput" placeholder="메시지를 입력해 주세요." autocomplete="off">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
